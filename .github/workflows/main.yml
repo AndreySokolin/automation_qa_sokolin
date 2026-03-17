@@ -23,9 +23,9 @@ jobs:
 
       # Генерируем Allure отчёт
       - name: Generate Allure Report
-        if: always()  # Запускается даже если тесты упали
+        if: always()
         run: |
-          npm install -g allure-commandline --quiet
+          npm install -g allure-commandline
           allure generate reports -o allure-report --clean
 
       # Публикуем отчёт на GitHub Pages
@@ -36,5 +36,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./allure-report
           publish_branch: gh-pages
-          keep_files: false
-          full_commit_message: "Обновление Allure отчёта за ${{ github.sha }}"
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
