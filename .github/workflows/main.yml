@@ -1,9 +1,8 @@
 name: Run AutoTests
 
-# Добавляем ручной запуск
 on:
   push:
-  workflow_dispatch:    # ← эта строчка включает кнопку
+  workflow_dispatch:
 
 jobs:
   test:
@@ -18,6 +17,9 @@ jobs:
 
       - name: Установка зависимостей
         run: pip install -r requirements.txt
+
+      - name: Установка проекта
+        run: pip install -e .
 
       - name: Запуск тестов
         run: pytest -v
