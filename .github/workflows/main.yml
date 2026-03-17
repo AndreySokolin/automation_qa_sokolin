@@ -1,6 +1,5 @@
-name: Run AutoTests
+name: Run AutoTests with Allure Report
 
-# Добавляем ручной запуск
 on:
   push:
   workflow_dispatch:
@@ -21,3 +20,21 @@ jobs:
 
       - name: Запуск тестов
         run: pytest -v
+
+      # Генерируем Allure отчёт
+      - name: Generate Allure Report
+        if: always()  # Запускается даже если тесты упали
+        run: |
+          npm install -g allure-commandline --quiet
+          allure generate reports -o allure-report --clean
+
+      # Публикуем отчёт на GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+          keep_files: false
+          full_commit_message: "Обновление Allure отчёта за ${{ github.sha }}"
