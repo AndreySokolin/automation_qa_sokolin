@@ -1,0 +1,23 @@
+name: Run AutoTests
+
+# Добавляем ручной запуск
+on:
+  push:
+  workflow_dispatch:    # ← эта строчка включает кнопку
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Установка Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Установка зависимостей
+        run: pip install -r requirements.txt
+
+      - name: Запуск тестов
+        run: pytest -v
