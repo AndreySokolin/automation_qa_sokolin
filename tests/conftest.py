@@ -1,16 +1,26 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import os
 
 
 @pytest.fixture(scope="function")
 def driver():
-    """Фикстура с отключенными уведомлениями о паролях"""
+    """Фикстура с отключенными уведомлениями о паролях и поддержкой CI/CD"""
 
     # Настройка опций браузера
     options = Options()
 
-    # Базовые настройки
+    # === ВАЖНО ДЛЯ CI/CD ===
+    # Проверяем, запущены ли тесты в GitHub Actions
+    if os.getenv('CI') == 'true':
+        options.add_argument("--headless")  # Безголовый режим
+        options.add_argument("--no-sandbox")  # Обязательно для Linux
+        options.add_argument("--disable-dev-shm-usage")  # Для избежания проблем с памятью
+        options.add_argument("--disable-gpu")  # Для Windows (но оставь)
+        options.add_argument("--remote-debugging-port=9222")  # Для отладки
+
+    # Базовые настройки (работают везде)
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-notifications")
     options.add_argument("--disable-popup-blocking")
@@ -18,28 +28,30 @@ def driver():
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option('useAutomationExtension', False)
 
-    # === ВАЖНО: Отключаем всё, связанное с паролями ===
+    # Отключаем всё, связанное с паролями
     options.add_experimental_option("prefs", {
-        # Отключаем предложение сохранять пароли
         "credentials_enable_service": False,
-        # Отключаем менеджер паролей
         "profile.password_manager_enabled": False,
-        # Отключаем проверку утечек паролей (самое главное!)
         "profile.password_manager_leak_detection": False,
-        # Отключаем автоматический вход
         "profile.password_manager_auto_signin": False,
-        # Отключаем сохранение паролей в целом
         "profile.default_content_setting_values.notifications": 2,
-        "profile.content_settings.exceptions.automatic_downloads": {},
-        "profile.content_settings.exceptions.popups": {}
     })
 
-    # Добавляем аргументы командной строки
-    options.add_argument("--disable-save-password-bubble")  # Отключаем пузырь сохранения
-    options.add_argument("--disable-password-generation")  # Отключаем генерацию паролей
+    # Отключаем пузырь сохранения паролей
+    options.add_argument("--disable-save-password-bubble")
+    options.add_argument("--disable-password-generation")
+
+    # Дополнительные настройки для стабильности в CI
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-infobars")
+    options.add_argument("--disable-web-security")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--allow-running-insecure-content")
 
     # Используем Selenium Manager для автоматической загрузки драйвера
     driver = webdriver.Chrome(options=options)
+
+    # Открываем сайт
     driver.get("https://www.saucedemo.com/")
 
     yield driver
