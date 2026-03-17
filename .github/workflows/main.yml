@@ -3,7 +3,7 @@ name: Run AutoTests
 # Добавляем ручной запуск
 on:
   push:
-  workflow_dispatch:    # ← эта строчка включает кнопку
+  workflow_dispatch:
 
 jobs:
   test:
