@@ -1,10 +1,8 @@
-import time
-
 from pages.inventory_page import InventoryPage
 from pages.login_page import LoginPage
 import allure
 import pytest
-
+import time
 
 
 @allure.feature("Корзина")
