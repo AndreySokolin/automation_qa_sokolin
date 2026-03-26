@@ -2,7 +2,8 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import os
-
+from endpoint.create_object import CreateObject
+from endpoint.delete_object import DeleteObject
 
 @pytest.fixture(scope="function")
 def driver():
@@ -56,3 +57,26 @@ def driver():
 
     yield driver
     driver.quit()
+
+
+@pytest.fixture()
+def obj_id(): # Создаем объект, возвращаем ID и передаем
+    new_object_endpoint = CreateObject()
+    payload = {
+        "name": "Apple MacBook Pro 16",
+        "data": {
+            "year": 2019,
+            "price": 1849.99,
+            "CPU model": "Intel Core i9",
+            "Hard disk size": "1 TB"
+        }
+    }
+
+
+    new_object_endpoint.new_object(payload)
+
+    yield new_object_endpoint.response_json['id'] # Предусловие
+
+
+    deletet_object_endpoint = DeleteObject() # Постусловие
+    deletet_object_endpoint.delete_by_id(new_object_endpoint.response_json['id'])
