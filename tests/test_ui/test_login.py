@@ -1,7 +1,8 @@
+from tests.test_ui.pages.inventory_page import InventoryPage
+from tests.test_ui.pages.login_page import LoginPage
 import allure
 import pytest
-from pages.login_page import LoginPage
-from pages.inventory_page import InventoryPage
+
 
 
 @allure.feature("Авторизация")

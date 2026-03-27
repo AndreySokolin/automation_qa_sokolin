@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 from .base_page import BasePage
+from selenium.webdriver.support.ui import Select
 import allure
 
 
@@ -39,7 +40,7 @@ class InventoryItem:
         """Кликнуть по названию товара для перехода в детальную карточку"""
         name_link = self.element.find_element(By.CLASS_NAME, "inventory_item_name")
         name_link.click()
-        from pages.product_page import ProductPage
+        from tests.test_ui.pages.product_page import ProductPage
         return ProductPage(self.driver)
 
 
@@ -124,7 +125,7 @@ class InventoryPage(BasePage):
         """Кликнуть по названию товара для перехода в детальную карточку"""
         item_locator = (By.XPATH, f"//div[@class='inventory_item_name' and text()='{item_name}']")
         self._click(item_locator)
-        from pages.product_page import ProductPage
+        from tests.test_ui.pages.product_page import ProductPage
         return ProductPage(self.driver)
 
     @allure.step("Получить количество товаров в корзине")
@@ -142,7 +143,6 @@ class InventoryPage(BasePage):
     @allure.step("Отсортировать товары по {sort_option}")
     def sort_items(self, sort_option: str):
         """Сортировка товаров"""
-        from selenium.webdriver.support.ui import Select
         select = Select(self._find_element(self.SORT_DROPDOWN))
         select.select_by_visible_text(sort_option)
 

@@ -42,5 +42,5 @@ class ProductPage(BasePage):
     def back_to_products(self):
         """Вернуться на главную страницу с товарами"""
         self._click(self.BACK_TO_PRODUCTS_BUTTON)
-        from pages.inventory_page import InventoryPage
+        from tests.test_ui.pages.inventory_page import InventoryPage
         return InventoryPage(self.driver)

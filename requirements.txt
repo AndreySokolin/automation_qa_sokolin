@@ -1,12 +1,15 @@
 # Тестирование
 pytest==8.3.5
+pytest-playwright==0.7.2
 selenium==4.29.0
 webdriver-manager==4.0.2
 requests==2.32.3
 allure-pytest==2.13.5
 faker==36.2.2
 
+# Playwright (UI тестирование)
+playwright==1.55.0
+
 # Работа с базами данных
-#psycopg2-binary==2.9.10
+psycopg2-binary==2.9.10
 sqlalchemy==2.0.39
-pandas

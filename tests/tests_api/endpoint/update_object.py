@@ -1,5 +1,5 @@
 import requests
-from endpoint.base_endpoint import Endpoint
+from tests.tests_api.endpoint.base_endpoint import Endpoint
 
 
 class UpdateObject(Endpoint):

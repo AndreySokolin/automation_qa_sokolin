@@ -1,21 +1,21 @@
-import pytest
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from tests.tests_api.endpoint.create_object import CreateObject
+from tests.tests_api.endpoint.delete_object import DeleteObject
+from playwright.async_api import Page
+from selenium import webdriver
+import pytest
 import os
-from endpoint.create_object import CreateObject
-from endpoint.delete_object import DeleteObject
+
 
 @pytest.fixture(scope="function")
-def driver():
-    """Фикстура с отключенными уведомлениями о паролях и поддержкой CI/CD"""
-
+def driver(): # Фикстура с отключенными уведомлениями о паролях и поддержкой CI/CD
     # Настройка опций браузера
     options = Options()
 
     # === ВАЖНО ДЛЯ CI/CD ===
     # Проверяем, запущены ли тесты в GitHub Actions
     if os.getenv('CI') == 'true':
-        options.add_argument("--headless")  # Безголовый режим
+        options.add_argument("--headless")
         options.add_argument("--no-sandbox")  # Обязательно для Linux
         options.add_argument("--disable-dev-shm-usage")  # Для избежания проблем с памятью
         options.add_argument("--disable-gpu")  # Для Windows (но оставь)
@@ -38,7 +38,7 @@ def driver():
         "profile.default_content_setting_values.notifications": 2,
     })
 
-    # Отключаем пузырь сохранения паролей
+    # Отключаем сохранения паролей
     options.add_argument("--disable-save-password-bubble")
     options.add_argument("--disable-password-generation")
 
@@ -71,12 +71,18 @@ def obj_id(): # Создаем объект, возвращаем ID и пере
             "Hard disk size": "1 TB"
         }
     }
-
-
     new_object_endpoint.new_object(payload)
-
     yield new_object_endpoint.response_json['id'] # Предусловие
-
-
     deletet_object_endpoint = DeleteObject() # Постусловие
     deletet_object_endpoint.delete_by_id(new_object_endpoint.response_json['id'])
+
+
+@pytest.fixture()
+def page(context):
+    page: Page = context.new_page()
+    page.set_viewport_size({"width": 1920, "height": 1080})
+    yield page
+
+#pytest --headed --browser chromium -v
+#pytest --headed --browser firefox -v
+#pytest --headed --browser webkit -v

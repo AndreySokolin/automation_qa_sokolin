@@ -1,11 +1,9 @@
 # сайт https://restful-api.dev
-import requests
-import pytest
-from endpoint.base_endpoint import Endpoint
-from endpoint.create_object import CreateObject
-from endpoint.get_object import GetObject
-from endpoint.update_object import UpdateObject
-from endpoint.delete_object import DeleteObject
+
+from tests.tests_api.endpoint.create_object import CreateObject
+from tests.tests_api.endpoint.update_object import UpdateObject
+from tests.tests_api.endpoint.delete_object import DeleteObject
+from tests.tests_api.endpoint.get_object import GetObject
 
 payload = {
         "name": "Apple MacBook Pro 16",
